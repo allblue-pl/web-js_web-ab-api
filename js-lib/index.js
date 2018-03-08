@@ -15,6 +15,7 @@ class abApi_Class
 
     constructor()
     {
+        this.debug = false;
         this.requestTimeout = 30000;
     }
 
@@ -38,11 +39,12 @@ class abApi_Class
         var request = new XMLHttpRequest();
 
         request.open('POST', uri, true);
-        request.onload = function() {
+        request.onload = () => {
             if (request.status >= 200 && request.status < 400) {
-                var result = Result.Parse(request.responseText, uri);
+                var result = Result.Parse(request.responseText, uri, this.debug);
 
-                console.log(uri, result);
+                if (this.debug)
+                    console.log(uri, result);
 
                 fn(result);
             } else {

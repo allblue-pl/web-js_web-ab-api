@@ -6,7 +6,7 @@ class Result
 
     static Error(message)
     {
-        var result = new Result.Class();
+        var result = new Result();
         result.result = 2;
         result.message = message;
         result.data = {};
@@ -16,7 +16,7 @@ class Result
 
     static Error_Connection(message)
     {
-        var result = new Result.Class();
+        var result = new Result();
         result.result = 3;
         result.message = message;
         result.data = {};
@@ -24,11 +24,11 @@ class Result
         return result;
     }
 
-    static Parse(data_string, uri)
+    static Parse(dataString, uri, debug = false)
     {
         var data = null;
         try {
-            data = JSON.parse(data_string);
+            data = JSON.parse(dataString);
         } catch (err) {
 
         }
@@ -36,10 +36,10 @@ class Result
         if (data === null) {
             var result = Result.Error(
                     'Cannot parse json data from: ' + uri);
-            result.data.data = data_string;
+            result.data.data = dataString;
 
-            if (SPK.Debug)
-                console.error(data_string);
+            if (debug)
+                console.error(dataString);
 
             return result;
         }
