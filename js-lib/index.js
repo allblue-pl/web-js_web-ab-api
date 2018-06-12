@@ -12,7 +12,6 @@ class abApi_Class
         return Result;
     }
 
-
     constructor()
     {
         this.debug = false;
@@ -55,6 +54,11 @@ class abApi_Class
             }
         };
         request.send(form_data);
+    }
+
+    setDebug(debug)
+    {
+        this.debug = debug;
     }
 
     upload(uri, json, files, fn, timeout = null)
