@@ -43,7 +43,7 @@ class abApi_Class
                 var result = Result.Parse(request.responseText, uri, this.debug);
 
                 if (this.debug)
-                    console.log(uri, result);
+                    console.log('webABApi', uri, result);
 
                 fn(result);
             } else {
