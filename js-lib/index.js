@@ -49,8 +49,12 @@ class abApi_Class
             } else {
                 if (status === 408)
                     fn(Result.ConnectionError());
-                else
-                    fn(Result.Error('Http request error.'));
+                else {
+                    let result = Result.Error('Http request error.');
+                    result.data.request = request;
+                    
+                    fn(result);
+                }
             }
         };
         request.send(form_data);
