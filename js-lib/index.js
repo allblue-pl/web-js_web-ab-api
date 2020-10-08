@@ -27,6 +27,15 @@ class abApi_Class
         this.post(uri, { json: json_string }, fn, timeout);
     }
 
+    async json_Async(uri, json, timeout = null)
+    {
+        return new Promise((resolve, reject) => {
+            this.json(uri, json, (result) => {
+                resolve(result);
+            }, timeout);
+        });
+    }
+
     post(uri, fields, fn, timeout = null)
     {
         timeout = timeout === null ? this.requestTimeout : timeout;
@@ -43,7 +52,7 @@ class abApi_Class
                 var result = Result.Parse(request.responseText, uri, this.debug);
 
                 if (this.debug)
-                    console.log('webABApi', uri, result);
+                    console.log('webABApi', uri, fields, result);
 
                 fn(result);
             } else {
