@@ -1,6 +1,8 @@
 'use strict';
 
 const 
+    js0 = require('js0'),
+
     Result = require('./Result')
 ;
 
@@ -29,6 +31,8 @@ class abApi_Class
 
     async json_Async(uri, json, timeout = null)
     {
+        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default() ]);
+
         return new Promise((resolve, reject) => {
             this.json(uri, json, (result) => {
                 resolve(result);
