@@ -92,5 +92,16 @@ class abApi_Class
         this.post(uri, fields, fn, timeout);
     }
 
+    async upload_Async(uri, json, files, timeout = null)
+    {
+        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default() ]);
+
+        return new Promise((resolve, reject) => {
+            this.upload(uri, json, files, (result) => {
+                resolve(result);
+            }, timeout);
+        });
+    }
+
 }
 module.exports = new abApi_Class();
