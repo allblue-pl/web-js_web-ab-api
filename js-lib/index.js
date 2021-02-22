@@ -22,6 +22,9 @@ class abApi_Class
 
     json(uri, json, fn, timeout = null) 
     {
+        js0.args(arguments, 'string', js0.RawObject, 'function', 
+                [ 'int', js0.Null, js0.Default() ]);
+
         var json_string = JSON.stringify(json);
         if (json_string === null)
             throw new Error('Cannot parse json.');
@@ -42,6 +45,8 @@ class abApi_Class
 
     post(uri, fields, fn, timeout = null)
     {
+        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default() ]);
+
         timeout = timeout === null ? this.requestTimeout : timeout;
 
         var form_data = new FormData();
