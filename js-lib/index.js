@@ -56,6 +56,10 @@ class abApi_Class
         var request = new XMLHttpRequest();
 
         request.open('POST', uri, true);
+        request.onerror = (evt) => {
+            let result = Result.Error('Http request error.');
+            fn(result);
+        };
         request.onload = () => {
             if (request.status >= 200 && request.status < 400) {
                 var result = Result.Parse(request.responseText, uri, this.debug);
