@@ -90,8 +90,13 @@ class abApi_Class
     upload(uri, json, files, fn, timeout = null)
     {
         var fields = {};
-        for (var file_name in files)
-            fields[file_name] = files[file_name];
+        for (var file_name in files) {
+            if (files[file_name] === null) {
+                json[file_name] = null;
+            } else {
+                fields[file_name] = files[file_name];
+            }
+        }
 
         var json_string = JSON.stringify(json);
         if (json_string === null)
