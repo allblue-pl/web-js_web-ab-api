@@ -23,7 +23,7 @@ class abApi_Class
     json(uri, json, fn, timeout = null) 
     {
         js0.args(arguments, 'string', js0.RawObject, 'function', 
-                [ 'int', js0.Null, js0.Default() ]);
+                [ 'int', js0.Null, js0.Default ]);
 
         var json_string = JSON.stringify(json);
         if (json_string === null)
@@ -34,7 +34,7 @@ class abApi_Class
 
     async json_Async(uri, json, timeout = null)
     {
-        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default() ]);
+        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default ]);
 
         return new Promise((resolve, reject) => {
             this.json(uri, json, (result) => {
@@ -45,7 +45,8 @@ class abApi_Class
 
     post(uri, fields, fn, timeout = null)
     {
-        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default() ]);
+        js0.args(arguments, 'string', js0.RawObject, 'function', 
+                [ 'int', js0.Null, js0.Default ]);
 
         timeout = timeout === null ? this.requestTimeout : timeout;
 
@@ -108,7 +109,7 @@ class abApi_Class
 
     async upload_Async(uri, json, files, timeout = null)
     {
-        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default() ]);
+        js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default ]);
 
         return new Promise((resolve, reject) => {
             this.upload(uri, json, files, (result) => {
