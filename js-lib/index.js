@@ -58,7 +58,8 @@ class abApi_Class
 
         request.open('POST', uri, true);
         request.onerror = (evt) => {
-            let result = Result.Error('Http request error.');
+            let result = Result.Error('Http request error.', 
+                    Result.Errors_HttpRequestError);
             fn(result);
         };
         request.onload = () => {
@@ -73,7 +74,8 @@ class abApi_Class
                 if (status === 408)
                     fn(Result.ConnectionError());
                 else {
-                    let result = Result.Error('Http request error.');
+                    let result = Result.Error('Http request error.', 
+                            Result.Errors_HttpRequestError);
                     result.data.request = request;
                     
                     fn(result);

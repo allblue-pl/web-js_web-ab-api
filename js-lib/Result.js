@@ -4,20 +4,27 @@
 class Result
 {
 
-    static Error(message)
-    {
-        var result = new Result();
-        result.result = 2;
-        result.message = message;
-        result.data = {};
-
-        return result;
+    static get ErrorResults_Other() {
+        return 2;
     }
 
-    static Error_Connection(message)
+    static get ErrorResults_HttpRequestError() {
+        return 3;
+    }
+
+    static get ErrorResults_CannotParseJSON() {
+        return 4;
+    }
+
+    static get ErrorResults_WrongResultFormat() {
+        return 5;
+    }
+
+
+    static Error(message, errorResultId = 2)
     {
         var result = new Result();
-        result.result = 3;
+        result.result = errorResultId;
         result.message = message;
         result.data = {};
 
@@ -35,7 +42,8 @@ class Result
 
         if (data === null) {
             var result = Result.Error(
-                    'Cannot parse json data from: ' + uri);
+                    'Cannot parse json data from: ' + uri,
+                    Result.ErrorResults_CannotParseJSON);
             result.data.data = dataString;
 
             if (debug)
@@ -47,7 +55,7 @@ class Result
         var result = new Result();
 
         if (!('result' in data)) {
-            result.result = 2;
+            result.result = Result.ErrorResults_WrongResultFormat;
             result.message = 'No result info in json data.';
         } else {
             result.result = data.result;
@@ -62,9 +70,14 @@ class Result
 
     constructor()
     {
-        this.result = 3;
+        this.result = -1;
         this.message = '';
         this.data = null;
+    }
+
+    getResult()
+    {
+        return this.result;
     }
 
     isSuccess()
@@ -79,12 +92,7 @@ class Result
 
     isError()
     {
-        return this.result === 2;
-    }
-
-    isError_Connection()
-    {
-        return this.result = 3;
+        return this.result >= 2;
     }
     
 };
