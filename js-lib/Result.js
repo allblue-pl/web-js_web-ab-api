@@ -37,10 +37,22 @@ class Result
         try {
             data = JSON.parse(dataString);
         } catch (err) {
-
+            // data = null;
         }
 
         if (data === null) {
+            var result = Result.Error(
+                    'Cannot parse json data from: ' + uri,
+                    Result.ErrorResults_CannotParseJSON);
+            result.data.data = dataString;
+
+            if (debug)
+                console.error(dataString);
+
+            return result;
+        }
+
+        if (typeof data !== 'object') {
             var result = Result.Error(
                     'Cannot parse json data from: ' + uri,
                     Result.ErrorResults_CannotParseJSON);
