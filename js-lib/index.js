@@ -55,7 +55,6 @@ class abApi_Class
             form_data.append(field_name, fields[field_name]);
 
         var request = new XMLHttpRequest();
-
         request.open('POST', uri, true);
         request.onerror = (evt) => {
             let result = Result.Error('Http request error.', 
@@ -71,7 +70,7 @@ class abApi_Class
 
                 fn(result);
             } else {
-                if (status === 408)
+                if (request.status === 408)
                     fn(Result.ConnectionError());
                 else {
                     let result = Result.Error('Http request error.', 
