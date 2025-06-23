@@ -12,18 +12,21 @@ class Result
         return 3;
     }
 
-    static get ErrorResults_CannotParseJSON() {
+    static get ErrorResults_HttpTimeoutError() {
         return 4;
     }
 
-    static get ErrorResults_WrongResultFormat() {
+    static get ErrorResults_CannotParseJSON() {
         return 5;
     }
 
+    static get ErrorResults_WrongResultFormat() {
+        return 6;
+    }
+    
 
-    static Error(message, errorResultId = 2)
-    {
-        var result = new Result();
+    static Error(request, message, errorResultId = 2) {
+        var result = new Result(request);
         result.result = errorResultId;
         result.message = message;
         result.data = {};
@@ -31,8 +34,7 @@ class Result
         return result;
     }
 
-    static Parse(dataString, uri, debug = false)
-    {
+    static Parse(request, dataString, uri, debug = false) {
         var data = null;
         try {
             data = JSON.parse(dataString);
@@ -41,7 +43,7 @@ class Result
         }
 
         if (data === null) {
-            var result = Result.Error(
+            var result = Result.Error(request,
                     'Cannot parse json data from: ' + uri,
                     Result.ErrorResults_CannotParseJSON);
             result.data.data = dataString;
@@ -53,7 +55,7 @@ class Result
         }
 
         if (typeof data !== 'object') {
-            var result = Result.Error(
+            var result = Result.Error(request,
                     'Cannot parse json data from: ' + uri,
                     Result.ErrorResults_CannotParseJSON);
             result.data.data = dataString;
@@ -64,7 +66,7 @@ class Result
             return result;
         }
 
-        var result = new Result();
+        var result = new Result(request);
 
         if (!('result' in data)) {
             result.result = Result.ErrorResults_WrongResultFormat;
@@ -80,30 +82,26 @@ class Result
     }
 
 
-    constructor()
-    {
+    constructor(request) {
+        this._request = request;
         this.result = -1;
         this.message = '';
         this.data = null;
     }
 
-    getResult()
-    {
+    getResult() {
         return this.result;
     }
 
-    isSuccess()
-    {
+    isSuccess() {
         return this.result === 0;
     }
 
-    isFailure()
-    {
+    isFailure() {
         return this.result === 1;
     }
 
-    isError()
-    {
+    isError() {
         return this.result >= 2;
     }
     

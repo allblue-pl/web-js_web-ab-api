@@ -14,14 +14,20 @@ class abApi_Class
         return Result;
     }
 
-    constructor()
-    {
-        this.debug = false;
-        this.requestTimeout = 30000;
+    get debug() {
+        return this._debug;
     }
 
-    json(uri, json, fn, timeout = null) 
-    {
+    get requestTimeout() {
+        return this._requestTimeout;
+    }
+
+    constructor() {
+        this._debug = false;
+        this._requestTimeout = 0;
+    }
+
+    json(uri, json, fn, timeout = null)  {
         js0.args(arguments, 'string', js0.RawObject, 'function', 
                 [ 'int', js0.Null, js0.Default ]);
 
@@ -32,8 +38,7 @@ class abApi_Class
         this.post(uri, { json: json_string }, fn, timeout);
     }
 
-    async json_Async(uri, json, timeout = null)
-    {
+    async json_Async(uri, json, timeout = null) {
         js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default ]);
 
         return new Promise((resolve, reject) => {
@@ -43,8 +48,7 @@ class abApi_Class
         });
     }
 
-    post(uri, fields, fn, timeout = null)
-    {
+    post(uri, fields, fn, timeout = null) {
         js0.args(arguments, 'string', js0.RawObject, 'function', 
                 [ 'int', js0.Null, js0.Default ]);
 
@@ -56,41 +60,54 @@ class abApi_Class
 
         var request = new XMLHttpRequest();
         request.open('POST', uri, true);
+        request.timeout = timeout;
         request.onerror = (evt) => {
-            let result = Result.Error('Http request error.', 
-                    Result.Errors_HttpRequestError);
+            console.log(evt);
+            let result = Result.Error(request, 
+                    `Http request error.`, 
+                    Result.ErrorResults_Other);
+            fn(result);
+        };
+        request.ontimeout = () => {
+            let result = Result.Error(request, 
+                   `Http request error: connection timeout`, 
+                    Result.ErrorResults_HttpTimeoutError);
             fn(result);
         };
         request.onload = () => {
             if (request.status >= 200 && request.status < 400) {
-                var result = Result.Parse(request.responseText, uri, this.debug);
+                var result = Result.Parse(request, request.responseText, uri, 
+                        this.debug);
 
                 if (this.debug)
                     console.log('webABApi', uri, fields, result);
 
                 fn(result);
             } else {
-                if (request.status === 408)
-                    fn(Result.ConnectionError());
-                else {
-                    let result = Result.Error('Http request error.', 
-                            Result.Errors_HttpRequestError);
-                    result.data.request = request;
-                    
-                    fn(result);
-                }
+                let result = Result.Error(request,
+                        `Http request error: ${request.status} -> ` +
+                        request.responseText, 
+                        Result.ErrorResults_HttpRequestError);
+                
+                fn(result);
             }
         };
         request.send(form_data);
     }
 
-    setDebug(debug)
-    {
-        this.debug = debug;
+    setDebug(debug) {
+        js0.args(arguments, 'boolean');
+        this._debug = debug;
     }
 
-    upload(uri, json, files, fn, timeout = null)
-    {
+    setRequestTimeout(timeout) {
+        js0.args(arguments, 'int');
+        this._requestTimeout = timeout;
+
+        console.log(this._requestTimeout);
+    }
+
+    upload(uri, json, files, fn, timeout = null) {
         var fields = {};
         for (var file_name in files) {
             if (files[file_name] === null) {
@@ -108,8 +125,7 @@ class abApi_Class
         this.post(uri, fields, fn, timeout);
     }
 
-    async upload_Async(uri, json, files, timeout = null)
-    {
+    async upload_Async(uri, json, files, timeout = null) {
         js0.args(arguments, 'string', js0.RawObject, [ 'int', js0.Null, js0.Default ]);
 
         return new Promise((resolve, reject) => {
