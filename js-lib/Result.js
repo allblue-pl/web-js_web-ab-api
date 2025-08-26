@@ -89,6 +89,10 @@ class Result
         this.data = null;
     }
 
+    getResponseUrl() {
+        return this._request.responseURL;
+    }
+
     getResult() {
         return this.result;
     }

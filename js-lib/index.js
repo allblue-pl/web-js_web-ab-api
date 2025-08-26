@@ -62,7 +62,6 @@ class abApi_Class
         request.open('POST', uri, true);
         request.timeout = timeout;
         request.onerror = (evt) => {
-            console.log(evt);
             let result = Result.Error(request, 
                     `Http request error.`, 
                     Result.ErrorResults_Other);
