@@ -1,5 +1,6 @@
 'use strict';
 
+import abText from "ab-text";
 
 class Result
 {
@@ -87,6 +88,39 @@ class Result
         this.result = -1;
         this.message = '';
         this.data = null;
+    }
+
+    getErrorInfo() {
+        const webABApi = require('./index.js');
+
+        if (this.result === webABApi.Result.ErrorResults_Other) {
+            return {
+                title: abText.$('Sys:Errors_Response_Other'),
+                message: this.getResponseUrl() + ' -> ' + this.message,
+            }
+        } else if (this.result === webABApi.Result.ErrorResults_HttpRequestError) {
+            return {
+                title: abText.$('Sys:Errors_Response_HttpRequestError'),
+                message: this.getResponseUrl() + ' -> ' + this.message,
+            };
+        } else if (this.result === webABApi.Result.ErrorResults_HttpTimeoutError) {
+            return {
+                title: abText.$('Sys:Errors_Response_HttpTimeoutError'),
+                message: '',
+            };
+        } else if (this.result === webABApi.Result.ErrorResults_CannotParseJSON) {
+            return {
+                title: abText.$('Sys:Errors_Response_CannotParseJSON'),
+                message: this.getResponseUrl() + ' -> ' + this.data.data,
+            };
+        } else if (this.result === webABApi.Result.ErrorResults_WrongResultFormat) {
+            return {
+                title: abText.$('Sys:Errors_Response_WrongResultFormat'),
+                message: this.getResponseUrl(),
+            };
+        }
+
+        return null;
     }
 
     getResponseUrl() {
