@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "allowImportingTsExtensions": true,
+        "declaration": true,
+        "declarationDir": "./ts-types",
+        "emitDeclarationOnly": true,
+        "erasableSyntaxOnly": true,
+        "module": "nodenext",
+        "outDir": ".",
+        "rewriteRelativeImportExtensions": true,
+        "rootDir": ".",
+        "strict": true,
+        "target": "esnext",
+        "types": [],
+        "useDefineForClassFields": true,
+        "verbatimModuleSyntax": true
+    },
+    "exclude": [
+        "./index.ts",
+        "./lib/**/*",
+        "./ts-types/**/*"
+    ]
+}

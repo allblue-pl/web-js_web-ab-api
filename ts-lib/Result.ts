@@ -1,42 +1,41 @@
-'use strict';
-
+import type { TS0RawObject } from "@allblue/ts0";
+import webABApi from "./index.js";
 import abText from "ab-text";
+import type { ErrorInfo, ResultData } from "./ts-types.ts";
 
-class Result
-{
-
-    static get ErrorResults_Other() {
+export default class Result {
+    static get ErrorResults_Other(): number {
         return 2;
     }
 
-    static get ErrorResults_HttpRequestError() {
+    static get ErrorResults_HttpRequestError(): number {
         return 3;
     }
 
-    static get ErrorResults_HttpTimeoutError() {
+    static get ErrorResults_HttpTimeoutError(): number {
         return 4;
     }
 
-    static get ErrorResults_CannotParseJSON() {
+    static get ErrorResults_CannotParseJSON(): number {
         return 5;
     }
 
-    static get ErrorResults_WrongResultFormat() {
+    static get ErrorResults_WrongResultFormat(): number {
         return 6;
     }
-    
 
-    static Error(request, message, errorResultId = 2) {
-        var result = new Result(request);
-        result.result = errorResultId;
-        result.message = message;
-        result.data = {};
 
-        return result;
+    static Error(request: XMLHttpRequest, message: string, errorResultId: number = 2): Result {
+        return new Result(request, errorResultId, message, {
+            result: -1,
+            message: "",
+            data: {},
+        });
     }
 
-    static Parse(request, dataString, uri, debug = false) {
-        var data = null;
+    static Parse(request: XMLHttpRequest, dataString: string, uri: string, 
+            debug: boolean = false): Result {
+        let data = null;
         try {
             data = JSON.parse(dataString);
         } catch (err) {
@@ -44,7 +43,7 @@ class Result
         }
 
         if (data === null) {
-            var result = Result.Error(request,
+            let result = Result.Error(request,
                     'Cannot parse json data from: ' + uri,
                     Result.ErrorResults_CannotParseJSON);
             result.data.data = dataString;
@@ -56,7 +55,7 @@ class Result
         }
 
         if (typeof data !== 'object') {
-            var result = Result.Error(request,
+            let result = Result.Error(request,
                     'Cannot parse json data from: ' + uri,
                     Result.ErrorResults_CannotParseJSON);
             result.data.data = dataString;
@@ -67,32 +66,34 @@ class Result
             return result;
         }
 
-        var result = new Result(request);
-
         if (!('result' in data)) {
-            result.result = Result.ErrorResults_WrongResultFormat;
-            result.message = 'No result info in json data.';
+            return new Result(request, Result.ErrorResults_WrongResultFormat,
+                    'No result info in json data.', {
+                result: -1,
+                message: "",
+                data: {},
+            });
         } else {
-            result.result = data.result;
-            if ('message' in data)
-                result.message = data.message;
-            result.data = data;
+            return new Result(request, data.result, data.message, data);
         }
-
-        return result;
     }
 
 
-    constructor(request) {
-        this._request = request;
-        this.result = -1;
-        this.message = '';
-        this.data = null;
+    #request: XMLHttpRequest;
+    result: number;
+    message: string;
+    data: ResultData;
+
+
+    constructor(request: XMLHttpRequest, result: number, message: string, 
+            data: ResultData) {
+        this.#request = request;
+        this.result = result;
+        this.message = message;
+        this.data = data;
     }
 
-    getErrorInfo() {
-        const webABApi = require('./index.js');
-
+    getErrorInfo(): ErrorInfo|null {
         if (this.result === webABApi.Result.ErrorResults_Other) {
             return {
                 title: abText.$('Sys:Errors_Response_Other'),
@@ -111,7 +112,8 @@ class Result
         } else if (this.result === webABApi.Result.ErrorResults_CannotParseJSON) {
             return {
                 title: abText.$('Sys:Errors_Response_CannotParseJSON'),
-                message: this.getResponseUrl() + ' -> ' + this.data.data,
+                message: this.getResponseUrl() + ' -> ' + 
+                        (this.data  === null ? "null" : this.data.data),
             };
         } else if (this.result === webABApi.Result.ErrorResults_WrongResultFormat) {
             return {
@@ -123,25 +125,24 @@ class Result
         return null;
     }
 
-    getResponseUrl() {
-        return this._request.responseURL;
+    getResponseUrl(): string {
+        return this.#request.responseURL;
     }
 
-    getResult() {
+    getResult(): number {
         return this.result;
     }
 
-    isSuccess() {
+    isSuccess(): boolean {
         return this.result === 0;
     }
 
-    isFailure() {
+    isFailure(): boolean {
         return this.result === 1;
     }
 
-    isError() {
+    isError(): boolean {
         return this.result >= 2;
     }
     
 };
-module.exports = Result;
