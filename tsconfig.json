@@ -6,6 +6,7 @@
         "emitDeclarationOnly": true,
         "erasableSyntaxOnly": true,
         "module": "nodenext",
+        "noImplicitOverride": true,
         "outDir": ".",
         "rewriteRelativeImportExtensions": true,
         "rootDir": ".",
@@ -16,8 +17,8 @@
         "verbatimModuleSyntax": true
     },
     "exclude": [
-        "./index.ts",
         "./lib/**/*",
-        "./ts-types/**/*"
+        "./ts-types/**/*",
+        "./tests/**/*"
     ]
 }
