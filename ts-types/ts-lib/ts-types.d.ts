@@ -4,7 +4,7 @@ export type ErrorInfo = {
     message: string;
 };
 export type ResultData = {
-    result: number;
+    result: -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6;
     message: string;
     [key: string]: TS0RawValue;
 };
