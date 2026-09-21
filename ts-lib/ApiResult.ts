@@ -1,4 +1,4 @@
-import type { TS0RawObject } from "@allblue/ts0";
+import { ts0Assert, type TS0RawObject } from "@allblue/ts0";
 import webABApi from "./index.ts";
 import abText from "ab-text";
 import type { ErrorInfo, ResultData } from "./ts-types.ts";
@@ -103,6 +103,18 @@ export default class ApiResult {
         this.result = result;
         this.message = message;
         this.data = data;
+    }
+
+    getData_Failure<TFailureData>(): TFailureData {
+        ts0Assert(this.isFailure(), "Api result is not a failure.");
+
+        return this.data as TFailureData;
+    }
+
+    getData_Success<TSuccessData>(): TSuccessData {
+        ts0Assert(this.isSuccess(), "Api result is not a success.");
+
+        return this.data as TSuccessData;
     }
 
     getErrorInfo(): ErrorInfo|null {

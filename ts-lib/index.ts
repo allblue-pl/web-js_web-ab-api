@@ -101,9 +101,9 @@ class webABApi_Class {
         this.#requestTimeout = timeout;
     }
 
-    upload(uri: string, json: TS0RawObject, files: {[fileName: string]: string}, 
+    upload(uri: string, json: TS0RawObject, files: {[fileName: string]: File}, 
             fn: ResultFn, timeout: number|typeof ts0.notSet = ts0.notSet): void {
-        var fields: {[fieldName: string]: string} = {};
+        var fields: Fields = {};
         for (var fileName in files) {
             if (files[fileName] === null)
                 json[fileName] = null;
@@ -119,7 +119,7 @@ class webABApi_Class {
         this.post(uri, fields, fn, timeout);
     }
 
-    async upload_Async(uri: string, json: TS0RawObject, files: {[fileName: string]: string}, 
+    async upload_Async(uri: string, json: TS0RawObject, files: {[fileName: string]: File}, 
             timeout: number|typeof ts0.notSet = ts0.notSet): Promise<ApiResult> {
         return new Promise((resolve, reject) => {
             this.upload(uri, json, files, (result) => {
@@ -143,5 +143,5 @@ class webABApi_Class {
 const webABApi = new webABApi_Class();
 export default webABApi;
 
-type Fields = {[fieldName: string]: string};
+type Fields = {[fieldName: string]: string|File};
 type ResultFn = (result: ApiResult) => void;

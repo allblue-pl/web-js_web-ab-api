@@ -15,6 +15,8 @@ export default class ApiResult {
     message: string;
     data: ResultData;
     constructor(request: XMLHttpRequest, result: -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6, message: string, data: ResultData);
+    getData_Failure<TFailureData>(): TFailureData;
+    getData_Success<TSuccessData>(): TSuccessData;
     getErrorInfo(): ErrorInfo | null;
     getResponseUrl(): string;
     getResult(): number;

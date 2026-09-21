@@ -13,15 +13,15 @@ declare class webABApi_Class {
     setOnErrorListener(onError: ((err: Error) => void) | null): void;
     setRequestTimeout(timeout: number): void;
     upload(uri: string, json: TS0RawObject, files: {
-        [fileName: string]: string;
+        [fileName: string]: File;
     }, fn: ResultFn, timeout?: number | typeof ts0.notSet): void;
     upload_Async(uri: string, json: TS0RawObject, files: {
-        [fileName: string]: string;
+        [fileName: string]: File;
     }, timeout?: number | typeof ts0.notSet): Promise<ApiResult>;
 }
 declare const webABApi: webABApi_Class;
 export default webABApi;
 type Fields = {
-    [fieldName: string]: string;
+    [fieldName: string]: string | File;
 };
 type ResultFn = (result: ApiResult) => void;
